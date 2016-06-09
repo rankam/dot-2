@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from examiner.forms import *
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.apps import apps
 from drivers.models import Driver
@@ -24,6 +24,29 @@ from examiner.models import *
 import simplejson
 import datetime
 from django.core import serializers
+
+
+
+# AUTH
+def logout_view(request):
+    logout(request)
+    return redirect('/examiner_register/'
+
+
+def examiner_login(request):
+	form = ExaminerLoginForm()
+	if request.method == 'POST':
+		username = request.POST['email_address'] 
+		password = request.POST['password']
+		user = authenticate(username=username, password=password)
+		if user is not None:
+			print(user)
+			login(request, user=user)
+			return redirect('/examiner/{}/calendar/'.format(user.id))
+
+	return render(request, 'examiner_login.html', {'form':form})
+
+
 
 class DriverDetailView(UpdateView):
 
@@ -189,18 +212,6 @@ def _create_exam_event(examiner, driver):
 
 
 
-def examiner_login(request):
-	form = ExaminerLoginForm()
-	if request.method == 'POST':
-		username = request.POST['email_address'] 
-		password = request.POST['password']
-		user = authenticate(username=username, password=password)
-		if user is not None:
-			print(user)
-			login(request, user=user)
-			return redirect('/examiner/{}/'.format(user.id))
-
-	return render(request, 'examiner_login.html', {'form':form})
 
 @login_required(login_url='/examiner/login/')
 def examiner_drivers(request):
