@@ -27,10 +27,10 @@ from django.core import serializers
 
 
 
-# AUTH
+######################################### AUTH
 def logout_view(request):
     logout(request)
-    return redirect('/examiner_register/'
+    return redirect('/examiner_register/')
 
 
 def examiner_login(request):
@@ -46,6 +46,7 @@ def examiner_login(request):
 
 	return render(request, 'examiner_login.html', {'form':form})
 
+######################################### AUTH
 
 
 class DriverDetailView(UpdateView):
