@@ -125,11 +125,20 @@ USE_L10N = True
 
 USE_TZ = True
 
+# # Static files (CSS, JavaScript, Images)
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+#     '/static/',   
+# ]
 
-# Static files (CSS, JavaScript, Images)
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/static/',   
-]
+# STATIC_URL = '/static/'
 
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+    '/static/',
+)
