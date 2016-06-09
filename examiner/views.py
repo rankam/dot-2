@@ -28,7 +28,7 @@ from django.core import serializers
 
 
 ######################################### AUTH
-def logout_view(request):
+def examiner_logout(request):
     logout(request)
     return redirect('/examiner_register/')
 
@@ -45,6 +45,27 @@ def examiner_login(request):
 			return redirect('/examiner/{}/calendar/'.format(user.id))
 
 	return render(request, 'examiner_login.html', {'form':form})
+
+
+def register(request):
+	# print(request.user)
+	# if request.user:
+	# 	return redirect('/examiner/{}'.format(request.user.id))
+	if request.method == 'POST':
+		form = ExaminerRegistrationForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			Examiner(user_id=user.id).save()
+			user = authenticate(username=request.POST['username'], password=request.POST['password1'])
+			login(request, user)
+			return redirect('/examiner/{}/calendar/'.format(user.id))
+
+
+	else:
+		form = ExaminerRegistrationForm()
+		return render(request, "examiner_register.html", {
+			'form': form,
+			})
 
 ######################################### AUTH
 
@@ -231,23 +252,6 @@ def examiner_drivers(request):
 		print(request)
 	return render(request, 'examiner_drivers.html', {'drivers': drivers, 'user':request.user})
 
-def register(request):
-	# print(request.user)
-	# if request.user:
-	# 	return redirect('/examiner/{}'.format(request.user.id))
-	if request.method == 'POST':
-		form = ExaminerRegistrationForm(request.POST)
-		if form.is_valid():
-			user = form.save()
-			Examiner(user_id=user.id).save()
-			login(request, user)
-			return redirect('/examiner/{}/'.format(new_user.id))
-
-	else:
-		form = ExaminerRegistrationForm()
-		return render(request, "examiner_register.html", {
-			'form': form,
-			})
 
 @login_required(login_url='/examiner/login/')
 def examiner_details(request):

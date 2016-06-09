@@ -443,10 +443,10 @@ hr {
                 </li>
             </ul>
         <div class="login-logout">
-        {% if user %}
-    <button type="button" class="btn btn-default examiner-auth-btn">Log Out</button   >
+        {% if user.is_authenticated %}
+    <button type="button" class="btn btn-default examiner-auth-btn logout">Log Out</button   >
         {% else %}
-    <button type="submit" class="btn btn-default examiner-auth-btn">Login</button   >
+    <button type="submit" class="btn btn-default examiner-auth-btn login">Login</button   >
         {% endif %}
         </div>
         </div>
@@ -486,6 +486,14 @@ $(function(){
             }
         );
     });
+
+    $(".logout").click(function() {
+        window.location.href = '/examiner_logout/'
+    })
+    $(".login").click(function() {
+        window.location.href = '/examiner_login/'
+    })
+
 });
 
 

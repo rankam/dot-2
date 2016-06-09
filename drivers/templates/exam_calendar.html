@@ -227,6 +227,9 @@ $(document).ready(function() {
 		setTimeout(function() {
 				$("#delete-exam-btn").hide()
 				$(".modal-title").text("Schedule New Exam")
+				$('.new-exam-driver-info').val('')
+				$("#update-exam-submit").attr({"id":"new-exam-submit"})
+				$("#new-exam-submit").text('Submit')
 
 			},100)
 		$(".new-exam-driver-info").attr("disabled", false)
