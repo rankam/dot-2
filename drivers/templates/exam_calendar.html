@@ -1,0 +1,337 @@
+{% extends "examiner_index.html" %}
+{% load bootstrap %}
+{% block content %}
+<div class="row header">
+	<div class="col-md-6">
+	    {% if company_name %}
+	    <h1>{{company_name}}</h1>
+	    {% else %}
+	    <h1>{{user.first_name|capfirst}} {{user.last_name|capfirst}}</h1>
+	    {% endif %}
+    </div>
+	<div class="col-md-6">
+		<button type="button" class="btn invite-btn examiner-invite-driver" id="new-exam-btn">Schedule New Exam</button>
+    </div>
+</div>
+    <hr />
+
+<div class="modal fade calendar-modal" id="calendar-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Schedule New Exam</h4>
+      </div>
+     
+      <div class="modal-body">
+		  <form action="" method="post">
+			{% csrf_token %}
+			
+			<!-- exam calender/schedular -->
+			<div style="overflow:hidden;">
+			    <div class="form-group">
+			        <div class="row">
+			            <div class="col-md-12">
+			                <div id="datetimepicker12"></div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- driver first name -->
+			<div class="row">   
+				<div class="form-group">  
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_first_name">First Name</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="driver_first_name" name="first_name" type="text">
+						</div>   
+					</div>
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_last_name">Last Name</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="driver_last_name" name="last_name" type="text">
+						</div>   
+					</div>
+				</div> 
+			</div> 
+			<div class="row">   
+				<div class="form-group">  
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_date_of_birth">Date of Birth</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="driver_date_of_birth" name="date_of_birth" type="text">
+						</div>   
+					</div>
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_gender">Gender</label>
+						<div>
+						<label class="radio-inline"> <input class="new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="M" checked> Male </label>
+						<label class="radio-inline"> <input class="new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="F"> Female </label>
+						</div>						
+					</div>
+				</div> 
+			</div> 
+			<div class="row">   
+				<div class="form-group">  
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_phone_number">Phone Number</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="driver_phone_number" name="phone_number" type="text">
+						</div>   
+					</div>
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_email">Email (Optional)</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="email_address" name="email_address" type="text">
+							<input class="form-control new-exam-driver-info" id="exam_id" name="exam_id" type="hidden">
+						</div>   
+					</div>
+				</div> 
+			</div> 
+		</div> <!-- modal body -->		      
+      
+      <div class="modal-footer">
+      <button type="button" class="btn btn-danger" id="delete-exam-btn">Delete</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="new-exam-submit">Submit</button>
+
+      </div>
+		  </form>        
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<div class="row">
+<div id='calendar'></div>
+</div>
+<script>
+
+(function($) {
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+var csrftoken = getCookie('csrftoken');
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+$(document).ready(function() {
+	var events = [{{events|safe}}];
+
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			defaultView: 'month',
+			editable: false,
+			events: events[0],
+        eventClick:  function(event, jsEvent, view) {
+
+     		loadCalendarModalData(event)
+			var dataDay = parseCalendarModalDate(event)
+			setTimeout(function() {
+				$('.day.active').removeClass('active')
+				$('[data-day="'+dataDay+'"]').addClass('active')
+				$('[data-action="togglePeriod"]').text(event.period)
+				$("#new-exam-submit").text("Update")
+				$("#new-exam-submit").attr({"id":"update-exam-submit"})
+				$(".new-exam-driver-info").attr("disabled", true)
+				$("#delete-exam-btn").show()
+
+			}, 100)
+		
+			$("#calendar-modal").modal("show")
+				 $('#datetimepicker12').datetimepicker({
+		                inline: true,
+		                sideBySide: true,
+		            }).data().DateTimePicker.date(moment(dataDay + " " + padZero(event.hour) + ":" + padZero(event.minute) + " " + event.period))  			
+	        }
+		});
+
+
+	function loadCalendarModalData (event) {
+		$(".modal-title").text("Edit Exam")
+		$("[name='first_name']").val(event.first_name)
+		$("[name='last_name']").val(event.last_name)
+		$("[name='phone_number']").val(event.phone_number)
+		$("[name='email_address']").val(event.email_address)
+		$("[name='gender']").val(event.gender)
+		$("[name='date_of_birth']").val(event.date_of_birth)
+		$('.timepicker-hour').val(event.hour)
+		$('.timepicker-minute').val(event.minute)
+		$('[name="exam_id"]').val(event.id)
+		localStorage['examEvent'] = event
+	}
+
+	function parseCalendarModalDate(event) {
+
+		y = event.start._pf.parsedDateParts[0]
+		m = padZero(event.start._pf.parsedDateParts[1] + 1)
+		d = padZero(event.start._pf.parsedDateParts[2])
+		return m + "/" + d + "/" + y
+
+	}
+
+	function padZero(n) {
+		if (String(n).length == 1) {
+			return "0" + String(n)
+		}
+		return n
+	}
+
+	function createSelectorDate(dt) {
+		dt.setDate(dt.getDate() + 7)
+		var y = dt.getFullYear();
+		// months are 0 indexed
+		var m = dt.getMonth() + 1;
+		if (String(m).length == 1) {
+			m = "0" + m
+		}
+		var d = dt.getDate();
+		if (String(d).length == 1) {
+			d = "0" + d
+		}
+		var selector = '[data-date="' + y + '-' + m + '-' + d + '"]'
+		return selector
+	}
+
+	$("#new-exam-btn").click(function() {
+		$("#calendar-modal").modal("show")
+		setTimeout(function() {
+				$("#delete-exam-btn").hide()
+				$(".modal-title").text("Schedule New Exam")
+
+			},100)
+		$(".new-exam-driver-info").attr("disabled", false)
+			 $('#datetimepicker12').datetimepicker({
+	                inline: true,
+	                sideBySide: true
+	            });
+	}) 
+
+	$("#new-exam-submit").click(function() {
+		if ($(this).attr('id') == "update-exam-submit") {
+			updateExam()
+			return false
+		}
+		var postData = {}
+		var driverInfo = $(".new-exam-driver-info").serializeArray()
+		// get driver info
+		for (i in driverInfo) {
+			postData[driverInfo[i]["name"]] = driverInfo[i]["value"]
+		}
+		var examDate = $(".day.active 	").attr("data-day")
+		var examHour = $(".timepicker-hour").text()
+		var examMinute = $(".timepicker-minute").text()
+		// apparently am/pm is referred to as period
+		var examPeriod = $("[data-action=togglePeriod]").text()
+		
+		postData["date"] = toDjangoDate(examDate)
+		postData["hour"] = examHour
+		postData["minute"] = examMinute
+		postData["period"] = examPeriod
+		$.ajax({
+			type: "POST",
+			url: '/examiner/{{user.id}}/new_exam_from_calendar/',
+			data: postData,
+			success: function(data) {
+				console.log(data)
+				$('#calendar').fullCalendar('renderEvent', data)
+				$("#calendar-modal").modal("hide")
+			}
+
+		})
+	})
+			
+
+	function toDjangoDate(date) {
+		var dateArr = date.split("/")
+		return [dateArr[2], dateArr[0], dateArr[1]].join("-")
+	}
+
+	function toDjangoDateTime(date, hour, minute, period) {
+		var dateArr = date.split("/");
+		var datePart = [dateArr[2], dateArr[0], dateArr[1]].join("-");
+		return datePart + " " + hour + ":" + minute + ":00 " + period
+	}
+
+	function updateExam() {
+		var postData = {};
+		var examDate = $(".day.active 	").attr("data-day")
+		var examHour = $(".timepicker-hour").text()
+		var examMinute = $(".timepicker-minute").text()
+		// apparently am/pm is referred to as period
+		var examPeriod = $("[data-action=togglePeriod]").text()
+		
+		postData["date"] = toDjangoDateTime(examDate, examHour, examMinute, examPeriod)
+		postData["hour"] = examHour
+		postData["minute"] = examMinute
+		postData["period"] = examPeriod
+		postData["model_name"] = "ExamEvent"
+		postData["exam_id"] = $("[name='exam_id']").val()
+		$.ajax({
+			type: "POST",
+			url: '/examiner/update_exam/',
+			data: postData,
+			success: function(data) {
+				d = JSON.parse(data)
+				var updatedExam = $("#calendar").fullCalendar( 'clientEvents', [ d.id ] )[0]
+				for (var key in d) {
+					if (updatedExam.hasOwnProperty(key)) {
+						updatedExam[key] = d[key]
+					}
+				}
+				$('#calendar').fullCalendar('updateEvent', updatedExam)
+				$("#calendar-modal").modal("hide")
+			}
+
+		})
+	}
+
+	$("#delete-exam-btn").click(function() {
+		var postData = {};
+		postData["exam_id"] = $("[name='exam_id']").val()		
+		$.ajax({
+			type: "POST",
+			url: '/examiner/delete_exam/',
+			data: postData,
+			success: function() {
+				$('#calendar').fullCalendar('removeEvents', [ postData["exam_id"] ])
+				$("#calendar-modal").modal("hide")
+			}
+
+		})
+	})
+
+});
+})(jQuery)
+
+</script>
+{% endblock %}

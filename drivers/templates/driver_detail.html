@@ -1,0 +1,13 @@
+{% extends "examiner_index.html" %}
+{% load bootstrap %}
+
+{% block content %}
+    <h2>Drivers</h2>
+    {{object}}
+    {{form|bootstrap}}
+    <ul>
+        {% for driver in object_list %}
+            <li>{{ driver.first_name }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

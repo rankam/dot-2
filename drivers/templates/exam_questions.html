@@ -1,0 +1,272 @@
+{% extends "examiner_index.html" %}
+{% load bootstrap %}
+{% block content %}
+<div class="row">
+<div class="col-md-6 exam-date">
+{{date|date}}
+</div>
+</div>
+<h2 class="exam-questions-title">General Questions</h2>
+<hr />
+<form id="exam-questions-form">
+
+<div class="panel panel-default">
+	  <div class="panel-body exam-questions-body" >
+			<div class="model" name="0" id="Driver">
+				<div class="form-group">
+	    			<label class="control-label" for="id_driver_first_name">First Name</label>
+					<div class="input-container">
+	    				{% if driver %}
+	    				<input class="form-control form-answer required" id="id_first_name" name="first_name" value={{driver.first_name}} required>
+	    				<input class="form-control form-answer" id="id_driver_id" name="driver_id" value={{driver.id}} type="hidden">
+					
+	    				{% else %}
+	    				<input class="form-control form-answer required" id="id_first_name" name="first_name">
+	    				{% endif %}
+					</div>
+				</div>
+
+				<div class="form-group">
+	    			<label class="control-label" for="id_driver_last_name">Last Name</label>
+					<div class="input-container">
+	    				{% if driver %}
+	    				<input class="form-control form-answer required" id="id_last_name" name="last_name" value={{driver.last_name}}>
+	    				{% else%}
+	    				<input class="form-control form-answer required" id="id_last_name" name="last_name">
+	    				{% endif %}
+					</div>
+				</div>
+				<div class="form-group">    
+						<label class="control-label" for="id_driver_gender">Gender</label>
+						<div>
+						{% if driver %}
+							{% if driver.gender == "M" %}
+							<label class="radio-inline"> <input class="form-answer new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="M" checked> Male </label>
+							<label class="radio-inline"> <input class="form-answer new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="F"> Female </label>					{% else %}
+							<label class="radio-inline"> <input class="form-answer new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="M"> Male </label>				
+							<label class="radio-inline"> <input class="form-answer new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="F" checked> Female </label>
+							{% endif %}
+						{% else %}
+						<label class="radio-inline"> <input class="form-answer new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="M" checked> Male </label>
+						<label class="radio-inline"> <input class="form-answer new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="F"> Female </label>
+						{% endif %}
+						</div>	   
+				</div>	
+
+			<div class="form-group">     
+				<label class="control-label" for="id_phone_number">Phone Number</label>
+					<div class="input-container">
+						{% if driver %}
+						<input class="form-control form-answer required" id="id_phone_number" name="phone_number" value={{driver.phone_number}}>
+						{% else %}
+						<input class="form-control form-answer required" id="id_phone_number" name="phone_number">
+						{% endif %}
+					</div>    
+			</div>
+
+			<div class="form-group">     
+				<label class="control-label" for="id_date_of_birth">Date of Birth</label>
+					<div class="input-container">
+						{% if driver %}
+						<input class="form-control form-answer required" id="id_date_of_birth" name="date_of_birth" value={{driver.date_of_birth_str}}>
+						{% else %}
+						<input class="form-control form-answer required" id="id_date_of_birth" name="date_of_birth">
+						{% endif %}
+					</div>    
+			</div>
+
+			<div class="form-group">     
+				<label class="control-label" for="id_email_address">Email Address (Optional)</label>
+					<div class="input-container">
+						{% if driver %}
+						<input class="form-control form-answer" id="id_email_address" name="email_address" value={{driver.email_address}}>
+						{% else %}
+						<input class="form-control form-answer" id="id_email_address" name="email_address">
+						{% endif %}
+					</div>    
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+
+<!-- <div class="row"> -->
+<button type="submit" class="btn btn-default exam-questions-prev-next-btn" id="exam-questions-submit" style="display:none">Submit</button  >
+<button type="submit" class="btn btn-default exam-questions-prev-next-btn" id="exam-questions-next">Next</button   >
+<button type="submit" class="btn btn-default exam-questions-prev-next-btn" id="exam-questions-previous">Previous</button   >
+<!-- </div> -->
+
+<script>
+
+	
+
+	var examQuestions = {
+		"0": '<div class="model" name="0" id="Driver"><div class="form-group"><label class="control-label" for="id_driver_first_name">First Name</label><div class="input-container"><input class="form-control form-answer required" id="id_first_name" name="first_name"></div></div><div class="form-group"><label class="control-label" for="id_driver_last_name">Last Name</label><div class="input-container"><input class="form-control form-answer  required" id="id_last_name" name="last_name"></div></div><div class="form-group">    <label class="control-label" for="id_driver_gender">Gender</label><div><label class="radio-inline"> <input class="form-answer new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="M" checked> Male </label><label class="radio-inline"> <input class="form-answer new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="F"> Female </label></div>	   </div>	<div class="form-group"><label class="control-label" for="id_phone_number">Phone Number</label><div class="input-container"><input class="form-control form-answer required" id="id_phone_number" name="phone_number"></div> </div><div class="form-group">     <label class="control-label" for="id_date_of_birth">Date of Birth</label><div class="input-container">{% if driver %}<input class="form-control form-answer required" id="id_date_of_birth" name="date_of_birth" value={{driver.date_of_birth}}>{% else %}<input class="form-control form-answer  required" id="id_date_of_birth" name="date_of_birth">{% endif %}</div></div><div class="form-group">     <label class="control-label" for="id_email_address">Email Address (Optional)</label><div class="input-container"><input class="form-control form-answer" id="id_email_address" name="email_address"></div>    </div></div>',
+		"1": '<div class="model" name="1" id="ExamQuestions"><div class="form-group"><label class="control-label" for="id_height_feet">Height feet</label><div class="input-container"><input class="form-control form-answer required" id="id_height_feet" name="height_feet" type="number"></div></div><div class="form-group">        <label class="control-label" for="id_height_inches">Height inches</label><div class="input-container"><input class="form-control form-answer required" id="id_height_inches" name="height_inches" type="number"></div>    </div><div class="form-group"><label class="control-label" for="id_weight">Weight</label><div class="input-container"><input class="form-control form-answer required" id="id_weight" name="weight" type="number"></div>    </div><div class="form-group"><label class="control-label" for="id_pulse_rate">Pulse rate</label><div class="input-container"><input class="form-control form-answer required" id="id_pulse_rate" name="pulse_rate" type="number"></div>    </div><div class="form-group">    <label class="control-label" for="id_pulse_rhythm_regular">Pulse Rhythm Regular</label><div><label class="radio-inline"> <input class="form-answer required new-exam-driver-info" type="radio" name="pulse_rhythm_regular" id="pulse_rhythm_regular" value="true" checked> Yes </label><label class="radio-inline"> <input class="form-answer required new-exam-driver-info" type="radio" name="pulse_rhythm_regular" id="pulse_rhythm_regular" value="false"> No </label></div>	  </div></div></div>',
+		"2": '<div class="model" name=2 id="BloodPressure" style="hidden"  title="Blood Pressure"><div class="form-group"><label class="control-label  " for="id_systolic">Systolic</label><div class=" "><input class=" form-control form-answer required" id="id_systolic" name="systolic" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_diastolic">Diastolic</label><div class=" "><input class=" form-control form-answer required" id="id_diastolic" name="diastolic" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_sitting">Sitting</label><div class=" "><input class=" form-control form-answer required" id="id_sitting" name="sitting" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_second_reading">Second Reading (If necessary)</label><div class=" "><input class=" form-control form-answer required" id="id_second_reading" name="second_reading" type="number" value="0"></div></div><div class="form-group"><label class="control-label  " for="id_other">Other</label><div class=" "><input class=" form-control form-answer required" id="id_other" maxlength="500" name="other" type="text"></div></div></div>',
+		"3": '<div class="model" style="hidden" name=3 id="Urinalysis" title="Urinalysis"><div class="form-group"><label class="control-label  " for="id_sp_gr">Specific Gravity</label><div class=" "><input class=" form-control form-answer required" id="id_sp_gr" name="sp_gr" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_protein">Protein</label><div class=" "><input class=" form-control form-answer required" id="id_protein" name="protein" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_blood">Blood</label><div class=" "><input class=" form-control form-answer required" id="id_blood" name="blood" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_sugar">Sugar</label><div class=" "><input class=" form-control form-answer required" id="id_sugar" name="sugar" type="number"></div></div></div>',
+		"4":  '<div class="model" style="hidden" name=4 id="Vision" title="Vision"><div class="form-group"><label class="control-label  " for="id_right_eye_uncorrected">Right eye uncorrected</label><div class=" "><input class=" form-control form-answer required" id="id_right_eye_uncorrected" name="right_eye_uncorrected" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_right_eye_corrected">Right eye corrected</label><div class=" "><input class=" form-control form-answer required" id="id_right_eye_corrected" name="right_eye_corrected" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_left_eye_uncorrected">Left eye uncorrected</label><div class=" "><input class=" form-control form-answer required" id="id_left_eye_uncorrected" name="left_eye_uncorrected" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_left_eye_corrected">Left eye corrected</label><div class=" "><input class=" form-control form-answer required" id="id_left_eye_corrected" name="left_eye_corrected" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_both_eyes_corrected">Both eyes corrected</label><div class=" "><input class=" form-control form-answer required" id="id_both_eyes_corrected" name="both_eyes_corrected" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_both_eyes_uncorrected">Both eyes uncorrected</label><div class=" "><input class=" form-control form-answer required" id="id_both_eyes_uncorrected" name="both_eyes_uncorrected" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_right_eye_horizontal_field_of_vision">Right eye horizontal field of vision</label><div class=" "><input class=" form-control form-answer required" id="id_right_eye_horizontal_field_of_vision" name="right_eye_horizontal_field_of_vision" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_left_eye_horizontal_field_of_vision">Left eye horizontal field of vision</label><div class=" "><input class=" form-control form-answer required" id="id_left_eye_horizontal_field_of_vision" name="left_eye_horizontal_field_of_vision" step="any" type="number"></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_color_blind" name="color_blind" type="checkbox"> <span>Color blind</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_monocular_vision" name="monocular_vision" type="checkbox"> <span>Monocular vision</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_referred_to_ophthalmologist_or_optometrist" name="referred_to_ophthalmologist_or_optometrist" type="checkbox"> <span>Referred to ophthalmologist or optometrist</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_received_documentation_from_ophthalmologist_or_optometrist" name="received_documentation_from_ophthalmologist_or_optometrist" type="checkbox"> <span>Received documentation from ophthalmologist or optometrist</span></label></div></div></div></div>',
+		"5": '<div class="model" style="hidden" name=5 id="Hearing" title="Hearing"><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_hearing_aid_used_for_test_right_ear" name="hearing_aid_used_for_test_right_ear" type="checkbox"> <span>Hearing aid used for test right ear</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_hearing_aid_used_for_test_left_ear" name="hearing_aid_used_for_test_left_ear" type="checkbox"> <span>Hearing aid used for test left ear</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_hearing_aid_used_for_test_both_ears" name="hearing_aid_used_for_test_both_ears" type="checkbox"> <span>Hearing aid used for test both ears</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_whisper_test_right_ear">Whisper test right ear</label><div class=" "><input class=" form-control form-answer required" id="id_whisper_test_right_ear" name="whisper_test_right_ear" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_whisper_test_left_ear">Whisper test left ear</label><div class=" "><input class=" form-control form-answer required" id="id_whisper_test_left_ear" name="whisper_test_left_ear" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_audiometric_right_ear_500_hz">Audiometric right ear 500 hz</label><div class=" "><input class=" form-control form-answer required" id="id_audiometric_right_ear_500_hz" name="audiometric_right_ear_500_hz" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_audiometric_right_ear_1000_hz">Audiometric right ear 1000 hz</label><div class=" "><input class=" form-control form-answer required" id="id_audiometric_right_ear_1000_hz" name="audiometric_right_ear_1000_hz" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_audiometric_right_ear_2000_hz">Audiometric right ear 2000 hz</label><div class=" "><input class=" form-control form-answer required" id="id_audiometric_right_ear_2000_hz" name="audiometric_right_ear_2000_hz" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_audiometric_left_ear_500_hz">Audiometric left ear 500 hz</label><div class=" "><input class=" form-control form-answer required" id="id_audiometric_left_ear_500_hz" name="audiometric_left_ear_500_hz" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_audiometric_left_ear_1000_hz">Audiometric left ear 1000 hz</label><div class=" "><input class=" form-control form-answer required" id="id_audiometric_left_ear_1000_hz" name="audiometric_left_ear_1000_hz" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_audiometric_left_ear_2000_hz">Audiometric left ear 2000 hz</label><div class=" "><input class=" form-control form-answer required" id="id_audiometric_left_ear_2000_hz" name="audiometric_left_ear_2000_hz" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_audiometric_right_ear_average">Audiometric right ear average</label><div class=" "><input class=" form-control form-answer required" id="id_audiometric_right_ear_average" name="audiometric_right_ear_average" step="any" type="number"></div></div><div class="form-group"><label class="control-label  " for="id_audiometric_left_ear_average">Audiometric left ear average</label><div class=" "><input class=" form-control form-answer required" id="id_audiometric_left_ear_average" name="audiometric_left_ear_average" step="any" type="number"></div></div></div>',
+		"6": '<div class="model" style="hidden" name=6 id="PhysicalExam" title="Physical Exam"><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_general" name="general" type="checkbox"> <span>General</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_skin" name="skin" type="checkbox"> <span>Skin</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_eyes" name="eyes" type="checkbox"> <span>Eyes</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_ears" name="ears" type="checkbox"> <span>Ears</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_mouth_throat" name="mouth_throat" type="checkbox"> <span>Mouth throat</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_cardiovascular" name="cardiovascular" type="checkbox"> <span>Cardiovascular</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_lungs_chest" name="lungs_chest" type="checkbox"> <span>Lungs chest</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_abdomen" name="abdomen" type="checkbox"> <span>Abdomen</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_genito_urinary_system_including_hernias" name="genito_urinary_system_including_hernias" type="checkbox"> <span>Genito urinary system including hernias</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_back_spine" name="back_spine" type="checkbox"> <span>Back spine</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_extremities_joins" name="extremities_joins" type="checkbox"> <span>Extremities joins</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_neurological_system_including_reflexes" name="neurological_system_including_reflexes" type="checkbox"> <span>Neurological system including reflexes</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_gait" name="gait" type="checkbox"> <span>Gait</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_vascular_system" name="vascular_system" type="checkbox"> <span>Vascular system</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_abnormality_descriptions">Abnormality descriptions</label><div class=" "><input class=" form-control form-answer required" id="id_abnormality_descriptions" maxlength="2000" name="abnormality_descriptions" type="text"></div></div></div>',
+		"7": '<div class="model" style="hidden" name=7 id="ExamDetermination" title="Exam Determination"><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_does_not_meet_standards" name="does_not_meet_standards" type="checkbox"> <span>Does not meet standards</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_does_not_meet_standards_description">Does not meet standards description</label><div class=" "><input class=" form-control form-answer required" id="id_does_not_meet_standards_description" maxlength="500" name="does_not_meet_standards_description" type="text"></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input checked="checked" id="id_meets_standards_2_years" name="meets_standards_2_years" type="checkbox"> <span>Meets standards 2 years</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_meets_standards_but_periodic_monitoring_required" name="meets_standards_but_periodic_monitoring_required" type="checkbox"> <span>Meets standards but periodic monitoring required</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_meets_standards_but_periodic_monitoring_required_reason">Meets standards but periodic monitoring required reason</label><div class=" "><input class=" form-control form-answer required" id="id_meets_standards_but_periodic_monitoring_required_reason" maxlength="500" name="meets_standards_but_periodic_monitoring_required_reason" type="text"></div></div><div class="form-group"><label class="control-label  " for="id_qualified_for">Qualified for</label><div class=" "><input class=" form-control form-answer required" id="id_qualified_for" maxlength="200" name="qualified_for" type="text"></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_wearing_hearing_aid" name="wearing_hearing_aid" type="checkbox"> <span>Wearing hearing aid</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_accompanied_by_a_waiver" name="accompanied_by_a_waiver" type="checkbox"> <span>Accompanied by a waiver</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_accompanied_by_a_waiver_reason">Accompanied by a waiver reason</label><div class=" "><input class=" form-control form-answer required" id="id_accompanied_by_a_waiver_reason" maxlength="500" name="accompanied_by_a_waiver_reason" type="text"></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_wearing_corrective_lenses" name="wearing_corrective_lenses" type="checkbox"> <span>Wearing corrective lenses</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_accompanied_by_a_skill_performance_evaluation_SPE_certificate" name="accompanied_by_a_skill_performance_evaluation_SPE_certificate" type="checkbox"> <span>Accompanied by a skill performance evaluation SPE certificate</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_qualified_by_operation_of_49_CFR_391_64_Federal" name="qualified_by_operation_of_49_CFR_391_64_Federal" type="checkbox"> <span>Qualified by operation of 49 CFR 391 64 Federal</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_determination_pending" name="determination_pending" type="checkbox"> <span>Determination pending</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_determination_pending_reason">Determination pending reason</label><div class=" "><input class=" form-control form-answer required" id="id_determination_pending_reason" maxlength="500" name="determination_pending_reason" type="text"></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_return_to_medical_exam_office_for_follow_up_on_must_be_45_days_or_less" name="return_to_medical_exam_office_for_follow_up_on_must_be_45_days_or_less" type="checkbox"> <span>Return to medical exam office for follow up on must be 45 days or less</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_return_to_medical_exam_office_for_follow_up_on_must_be_45_days_or_less_length">Return to medical exam office for follow up on must be 45 days or less length</label><div class=" "><input class=" form-control form-answer required" id="id_return_to_medical_exam_office_for_follow_up_on_must_be_45_days_or_less_length" name="return_to_medical_exam_office_for_follow_up_on_must_be_45_days_or_less_length" type="number" value="0"></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_medical_examination_report_amended" name="medical_examination_report_amended" type="checkbox"> <span>Medical examination report amended</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_medical_examination_report_amended_reason">Medical examination report amended reason</label><div class=" "><input class=" form-control form-answer required" id="id_medical_examination_report_amended_reason" maxlength="500" name="medical_examination_report_amended_reason" type="text"></div></div><div class="form-group"><label class="control-label  " for="id_if_amended_examiner_signature">If amended examiner signature</label><div class=" "><input class=" form-control form-answer required" id="id_if_amended_examiner_signature" maxlength="500" name="if_amended_examiner_signature" type="text"></div></div><div class="form-group"><label class="control-label  " for="id_if_amended_examiner_signature_date">If amended examiner signature date</label><div class=" "><input class=" form-control form-answer required" id="id_if_amended_examiner_signature_date" name="if_amended_examiner_signature_date" type="text" value={{date|safe}}></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_incomplete_examination" name="incomplete_examination" type="checkbox"> <span>Incomplete examination</span></label></div></div></div><div class="form-group"><label class="control-label  " for="id_incomplete_examination_reason">Incomplete examination reason</label><div class=" "><input class=" form-control form-answer required" id="id_incomplete_examination_reason" maxlength="500" name="incomplete_examination_reason" type="text"></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_driving_within_an_exempt_intracity_zone" name="driving_within_an_exempt_intracity_zone" type="checkbox"> <span>Driving within an exempt intracity zone</span></label></div></div></div><div class="form-group"><div class=""><div class="checkbox"><label><input id="id_grandfathered_from_state_requirements" name="grandfathered_from_state_requirements" type="checkbox"> <span>Grandfathered from state requirements</span></label></div></div></div></div>'
+
+	}
+
+	function getCookie(name) {
+	    var cookieValue = null;
+	    if (document.cookie && document.cookie != '') {
+	        var cookies = document.cookie.split(';');
+	        for (var i = 0; i < cookies.length; i++) {
+	            var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+	function csrfSafeMethod(method) {
+	    // these HTTP methods do not require CSRF protection
+	    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	var csrftoken = getCookie('csrftoken');
+	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+	        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+	            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	        }
+	    }
+	});
+
+
+
+	function nextQuestion() {
+		$("#exam-questions-next").on('click', function(e) {
+			var form = $("#exam-questions-form")
+			if (!form.valid()) {
+				return false
+			}
+			storeExamAnswers();
+			nextForm();
+
+		})
+	}
+
+	function previousQuestion() {
+		$("#exam-questions-previous").click(function(e) {
+			e.preventDefault();
+			// this will retrieve the answers so that they can be changed
+			getExamAnswers()
+			previousForm();
+		})
+	}
+
+	function getExamAnswers() {
+
+		var data = $('.exam-questions-body .form-answer').serializeArray();
+
+		for (i in data) {
+			var selector = '[name="' + data[i]['name'] + '"]'
+			var value = localStorage[data[i]['name']]
+			$(selector).val(value)	
+		}
+		
+	}
+
+	function checkRequired() {
+		var requiredFields = {};
+		var data = $('.exam-questions-body .required').serializeArray();
+		for (var i in data) {
+			if (data[i]['value'] == "") {
+				requiredFields[data[i]['name']] = data[i]['value']
+			}	
+		}
+		return requiredFields
+	}
+
+	function storeExamAnswers() {
+		var postData = {};
+		var data = $('.exam-questions-body .form-answer').serializeArray();
+		for (i in data) {
+			postData[data[i]['name']] = data[i]['value']
+			localStorage.setItem(data[i]['name'], data[i]['value']);
+		}
+		postData["model"] = $(".model").attr("id")
+		finalAnswers[$(".model").attr("id")] = postData;
+		// finalAnswers[postData["model"]] = postData;
+	}
+
+
+
+	function nextForm() {
+		var currentVal = parseInt($(".model").attr("name"))
+		var nextVal = currentVal + 1
+		if (nextVal <= 7) {
+			if (nextVal == 7) {
+				$("#exam-questions-next").hide()
+				$("#exam-questions-submit").show()
+			}
+			$(".exam-questions-body").append(examQuestions[String(nextVal)])
+			// probably remove the string interpolation to support older browsers
+			var currentFormSelector = `[name="${currentVal}"]`
+			var nextFormSelector = `[name="${nextVal}"]`
+			var nextTitle = $(nextFormSelector).attr("title")
+			$(currentFormSelector).hide().remove()
+			$(nextFormSelector).fadeIn()
+			$(".exam-questions-title").text(nextTitle);
+			$('html,body').scrollTop(0);		
+		} 
+
+	}
+
+	function previousForm() {
+		var currentVal = parseInt($(".model").attr("name"))
+		var previousVal = currentVal - 1
+		if (previousVal >= 0) {
+			if (previousVal == 6) {
+				$("#exam-questions-submit").hide()
+				$("#exam-questions-next").show()
+			}
+			$(".exam-questions-body").append(examQuestions[String(previousVal)])
+			var currentFormSelector = `[name="${currentVal}"]`
+			var previousFormSelector = `[name="${previousVal}"]`
+			var previousTitle = $(previousFormSelector).attr("title")
+			$(currentFormSelector).slideToggle().remove()
+			$(previousFormSelector).fadeIn()
+			$(".exam-questions-title").text(previousTitle);
+			$('html,body').scrollTop(0);
+			getExamAnswers();
+
+		}
+
+	}
+
+	function submitAnswers() {
+		$("#exam-questions-submit").click(function() {
+			storeExamAnswers()
+
+			$.ajax({
+				type: "POST",
+				url: '/examiner/submit_exam/',
+				data: JSON.stringify(finalAnswers),
+				// success: function(data) {
+				// 	$('#calendar').fullCalendar('updateEvent', updatedExam)
+				// 	$("#calendar-modal").modal("hide")
+				// }
+
+			})		
+		})
+	}
+
+	// TODO - KEEP ALL OF THE DATA CLIENT SIDE UNTIL THE FINAL SUBMIT IS CLICKED	
+	finalAnswers = {};
+	nextQuestion()
+	previousQuestion()
+	submitAnswers()
+</script>
+
+
+<!-- ExamDetermination -->
+{% endblock %}

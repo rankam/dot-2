@@ -1,0 +1,350 @@
+{% extends "examiner_index.html" %}
+{% load bootstrap %}
+
+{% block content %}
+<div class="row header">
+	<div class="col-md-6">
+	    {% if company_name %}
+	    <h1>{{company_name}}</h1>
+	    {% else %}
+	    <h1>{{user.first_name|capfirst}} {{user.last_name|capfirst}}</h1>
+	    {% endif %}
+    </div>
+	<div class="col-md-6">
+		<button type="button" class="btn invite-btn examiner-invite-driver" id="new-invite-btn">Invite New Driver</button>
+    </div>
+</div>
+    <hr />
+<div class="modal fade calendar-modal" id="calendar-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Schedule New Exam</h4>
+      </div>
+     
+      <div class="modal-body">
+		  <form action="" method="post">
+			{% csrf_token %}
+			
+			<!-- exam calender/schedular -->
+			<div style="overflow:hidden;">
+			    <div class="form-group">
+			        <div class="row">
+			            <div class="col-md-12">
+			                <div id="datetimepicker12"></div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- driver first name -->
+			<div class="row">   
+				<div class="form-group">  
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_first_name">First Name</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="driver_first_name" name="first_name" type="text">
+						</div>   
+					</div>
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_last_name">Last Name</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="driver_last_name" name="last_name" type="text">
+						</div>   
+					</div>
+				</div> 
+			</div> 
+			<div class="row">   
+				<div class="form-group">  
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_date_of_birth">Date of Birth</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="driver_date_of_birth" name="date_of_birth" type="text">
+						</div>   
+					</div>
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_gender">Gender</label>
+						<div>
+						<label class="radio-inline"> <input class="new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="M" checked> Male </label>
+						<label class="radio-inline"> <input class="new-exam-driver-info" type="radio" name="gender" id="driver_gender" value="F"> Female </label>
+						</div>						
+					</div>
+				</div> 
+			</div> 
+			<div class="row">   
+				<div class="form-group">  
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_phone_number">Phone Number</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="driver_phone_number" name="phone_number" type="text">
+						</div>   
+					</div>
+					<div class="col-md-6">   
+						<label class="control-label" for="id_driver_email">Email (Optional)</label>
+						<div class="input-container">
+							<input class="form-control new-exam-driver-info" id="email_address" name="email_address" type="text">
+						</div>   
+					</div>
+				</div> 
+			</div> 
+		</div> <!-- modal body -->		      
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="new-exam-submit">Submit</button>
+
+      </div>
+		  </form>        
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!-- <div class="container"> -->
+<div class="row examiner-driver-search">
+<div class="col-md-2"></div>
+<div class="col-md-2"></div>
+<div class="col-md-2"></div>
+<div class="col-md-6">
+<div class="input-group examiner-driver-search-form">
+	{% csrf_token %}
+  <input type="text" class="form-control" id="examiner-driver-search-form" placeholder="Search Drivers..." aria-describedby="basic-addon1">
+</div>
+<div class="examiner-driver-search-form search-results">
+
+</div>
+</div>
+</div>
+<!-- </div> -->
+
+<div class="panel panel-default">
+	<div class="panel-body examiner-drivers">
+		<div class="bs-example examiner-driver-table"> 
+			<table class="table examiner-driver-table"> 
+
+				<thead> 
+					<tr> 
+						<th></th> 
+						<th>First Name</th> 
+						<th>Last Name</th> 
+						<th>Exam Date</th> 
+						<th>Certification Expiration</th> 
+						<th>Begin Exam</th> 
+
+					</tr> 
+				</thead> 
+			<tbody> 
+			{% for driver in drivers %}
+				<tr class="driver-page" id="{{driver.id}}" data-href='/examiner/{{user.id}}/driver/{{driver.id}}'> 
+					<td scope="row"></td> 
+					<td scope="row" name="{{driver.id}}">{{driver.first_name}}</td>
+					<td>{{driver.last_name}}</td> 
+					<!-- need to make this the exam date -->
+					<td>{{driver.date_of_birth}}</td> 
+					<td>{{driver.registration_date}}</td>
+					<td class="examiner-begin-exam"><a href="/examiner/{{user.id}}/exam/driver/{{driver.id}}/">Begin Exam</a></td>
+				</tr>
+			{% endfor %} 
+			</tbody> 
+		</table> 
+	</div>
+</div>
+</div>
+
+<div class="pagination">
+
+	<nav>
+  <ul class="pagination">
+ {% if drivers.has_previous %}
+      <li><a href="?page={{ drivers.previous_page_number }}" aria-label="Next">
+		{% else %}
+     <li class="disabled"> <a aria-label="Previous">
+      	{% endif %}
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% for page in drivers.paginator.page_range %}
+    <li><a href="?page={{ page }}">{{page}}</a></li>
+    {% endfor %}
+    
+        {% if drivers.has_next %}
+      <li><a href="?page={{ drivers.next_page_number }}" aria-label="Next">
+		{% else %}
+     <li class="disabled"> <a aria-label="Next">
+      	{% endif %}
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+ 
+</div>
+
+<script>
+// $(document).ready(function($) {
+//     $(".driver-page").click(function() {
+//     	console.log($(this.id).selector)
+//     	// $.get($(this).data("href"), { 'driver_id':$(this.id).selector })
+//         window.document.location = $(this).data("href") + '?driver_id=' + $(this.id).selector
+// 	})
+// });
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = $.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
+// search function
+$(function() {
+    // start sending ajax requests as the user types
+    $('#examiner-driver-search-form').keyup(function() {
+ 
+        // clear search results when user leaves search box
+        $(this).blur(function() {
+
+            // ensure the links are still available when user moves out of search area
+            setTimeout(function() {
+                $(".search-results").html("")
+            }, 300)
+            
+        })
+ 		if ($("#examiner-driver-search-form").val().trim() != "") {
+	        $.ajax({
+	            type: "POST",
+	            url: "/examiner/driver_search/",
+	            data: {
+	                "search_text" : $("#examiner-driver-search-form").val(),
+	                "csfrmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()
+	            },
+	            success: searchSuccess,
+	            datatype: 'html'
+	        });
+ 		} else {
+
+	        $.ajax({
+	            type: "POST",
+	            url: "/examiner/driver_search/clear/",
+	            data: {
+	                "search_text" : $("#examiner-driver-search-form").val(),
+	                "csfrmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()
+	            },
+	            success: clearSearchSuccess,
+	            datatype: 'html'
+	        }); 			
+ 		}
+    });
+});
+ 
+function searchSuccess(data, textStatus, jqXHR)
+{
+
+    // display search results
+    if (data != '') {
+		$('tbody').empty()
+    	$("tbody").append(data);
+    } 
+}
+
+function clearSearchSuccess(data, textStatus, jqXHR)
+{
+
+    // display search results
+	$('tbody').empty()
+	$("tbody").append(data);
+}
+
+$("#examiner-driver-search-form").focusout(function() {
+		$(this).val('')
+	$(this).attr("placeholder", "Search Drivers...")
+})
+
+
+
+$("#new-invite-btn").click(function() {
+		$("#calendar-modal").modal("show")
+			 $('#datetimepicker12').datetimepicker({
+	                inline: true,
+	                sideBySide: true
+	            });
+	}) 
+
+$(function(){
+    $('.table tr[data-href]').each(function(){
+        $(this).css('cursor','pointer').click( function(){ 
+                document.location = $(this).attr('data-href'); 
+            }
+        );
+    });
+});
+
+
+
+$("#new-exam-submit").click(function() {
+		var postData = {}
+		var driverInfo = $(".new-exam-driver-info").serializeArray()
+		// get driver info
+		for (i in driverInfo) {
+			postData[driverInfo[i]["name"]] = driverInfo[i]["value"]
+		}
+		var examDate = $(".day.active 	").attr("data-day")
+		var examHour = $(".timepicker-hour").text()
+		var examMinute = $(".timepicker-minute").text()
+		// apparently am/pm is referred to as period
+		var examPeriod = $("[data-action=togglePeriod]").text()
+		
+		postData["date"] = toDjangoDate(examDate)
+		postData["hour"] = examHour
+		postData["minute"] = examMinute
+		postData["period"] = examPeriod
+		$.ajax({
+			type: "POST",
+			url: '/examiner/{{user.id}}/new_exam_from_calendar/',
+			data: postData,
+			success: function(data) {
+				console.log(data)
+				$('#calendar').fullCalendar('renderEvent', data)
+				$("#calendar-modal").modal("hide")
+			}
+
+		})
+	})
+			
+
+
+
+	function toDjangoDate(date) {
+		var dateArr = date.split("/")
+		return [dateArr[2], dateArr[0], dateArr[1]].join("-")
+	}
+
+
+</script>
+
+{% endblock %}

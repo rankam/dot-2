@@ -1,0 +1,10 @@
+
+{% if drivers.count > 0 %}
+ 
+{% for driver in drivers %}
+    <a href='{{ driver.id }}'><li>{{ driver.first_name }} {{ driver.last_name }}</li></a>
+{% endfor %}
+ 
+{% else %}
+<li>No drivers found.</li>
+{% endif %}

@@ -1,0 +1,493 @@
+{% load staticfiles %}
+{% load bootstrap %}
+
+<html lang="en">
+
+<header>
+    <script src="{% static "js/jquery.min.js" %}"></script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="{% static "js/z-bootstrap.min.js" %}"></script>
+    <script src="{% static "js/moment.js" %}"></script>
+    <script src="{% static "js/bootstrap-datetimepicker.min.js" %}"></script>
+    <script src="{% static "js/fullcalendar.min.js" %}"></script>
+    <script src="{% static "js/jquery.validate.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel='stylesheet' href="{% static "css/fullcalendar.min.css" %}" />
+    <link rel='stylesheet' href="{% static "css/bootstrap-datetimepicker.min.css" %}" />
+
+    <title>Examiner</title>
+
+    
+    
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</header>
+<style>
+/*!
+ * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+/* Toggle Styles */
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+    padding-left: 250px;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    left: 250px;
+    width: 0;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    background: #3b3b3b;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #999999;
+}
+
+.sidebar-nav li:hover {
+    text-decoration: none;
+    color: red!important;
+    /*color: #fff;*/
+    background: rgba(255,255,255,0.2);
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 250px;
+    }
+
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 250px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}   
+
+body {
+    /*color: #3b3b3b;*/
+    background-color: #f5f5f5;
+}
+
+body input {
+    text-transform: capitalize!important;
+}
+
+body label {
+    text-transform: capitalize!important;
+}
+
+.login-logout {
+    position:absolute;
+    bottom:5%;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+/*EXAM QUESTIONS*/
+label.control-label.required:after{
+    content: " * Required"!important;
+    color: red;
+    display:none;
+}
+
+.exam-driver-name {
+    text-align:end;
+}
+
+.exam-questions-prev-next-btn {
+    float:right!important;
+    margin-right:5px;
+    width: 80px;
+    background-image: none!important;
+
+}
+hr {
+    border-top: 4px solid #d9d9d9;
+}
+.nav-tabs {
+    max-width: 50%;
+    border-top: 0px!important;
+}
+
+.nav-tabs li {
+    float: left!important;
+    margin-bottom: -1px!important;
+    outline: 0;
+}
+
+.active.num-exams-today a {
+    background-color: #fff!important;
+    color: steelblue!important;
+}
+
+.num-exams-today a {
+    background-color: #fff!important;
+    color: black!important;
+}
+
+.num-exams-today {
+    font-weight: bold;
+    font-size: 16pt;
+    float:left;
+}
+
+.nav-tabs li.active a {
+    border-color:black;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active {
+    color: #337ab7;
+}
+
+.sidebar-nav li a {
+    /*puts the label beside the icon on the side bar*/
+    display:inline;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#examiner-sidebar-welcome{
+    /*margin-top: 30px;*/
+    margin-right:15;
+    text-align: center;
+}
+
+.logo {
+    margin-bottom: 40px;
+    /*margin-top: 10px;*/
+    display:block;
+    text-align:center;
+    font-size: 64;
+    margin-right:15;
+}
+
+.login-logout {
+    /*margin-right:15;*/
+    text-align: center;
+    width: 250px;
+}
+
+.btn-default.examiner-auth-btn {
+    background-image: none!important;
+    background-color: #333;
+    width: 80%;
+    margin-right:auto;
+    margin-left:auto;
+    text-shadow: none!important;
+    color:#999999;
+    /*color:steelblue;*/
+}
+/*END EXAM QUESTIONS*/
+
+/*EXAM INDEX*/
+.header{
+    margin-top: 30px;
+}
+
+
+/*EXAM INDEX*/
+
+.glyphicon {
+    color: #999999!important;
+}
+/*END EXAM INDEX*/
+
+/*EXAMINER*/
+
+
+.driver-page:hover {
+    background-color:steelblue!important;
+    opacity: .5;
+    color:white;
+    cursor:pointer;
+}
+
+.examiner-begin-exam {
+    background-color: #fff!important;
+    color: #337ab7!important;
+    opacity: 1!important;
+}
+
+.examiner-invite-driver {
+    float: right;
+    margin-top: 25px;
+    width: 40%;
+    background-color: steelblue;
+    background-image: none!important;
+    text-shadow: none!important;
+}
+
+.invite-btn {
+    box-shadow: none;
+    border-color: steelblue;
+    color: white;
+}
+
+.examiner-driver-table {
+    margin-top: 70px;
+}
+
+.examiner-begin-exam:hover {
+    
+}
+
+.examiner-drivers {
+    margin-top: -50px;
+    margin-bottom: -20px;
+}
+
+.row.examiner-driver-search {
+    margin-bottom: 10px;
+}
+
+.examiner-driver-search-form {
+    float: right;
+}
+
+.examiner-driver-info-panel {
+    margin-top: 60px;
+}
+
+/*.examiner-driver-table th{*/
+  /*  text-align: center;
+}
+
+.examiner-driver-table td{
+    text-align: center;
+}*/
+/*EXAMINER*/
+
+
+/*CALENDAR*/
+
+#delete-exam-btn {
+    float:left;
+}
+
+.fc-content:hover {
+    cursor: pointer;
+}
+/*CALENDAR*/
+
+/*MISCELLANEOUS*/
+
+.error {
+    color:#a94442;
+}
+</style>
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand" id="examiner-sidebar-welcome">
+<!--                     <a href="#">
+                        {% if user %}
+                        Welcome, {{user.first_name|capfirst}} {{user.last_name|capfirst}}
+                        {% else %}
+                        Welcome
+                        {% endif %}
+                    </a> -->
+                </li>
+                <!-- <div class="logo-container"> -->
+                <span class="glyphicon glyphicon-home logo" aria-hidden="true"></span>
+                <!-- </div> -->
+                <!-- <hr /> -->
+                <li class="li-sidebar" data-href="/examiner/{{user.id}}">
+                <span class="glyphicon glyphicon-home" aria-hidden="true">
+                    <span class="glyphicon-class">
+                        <a class="sidebar-href" href='#'>Home</a>
+                    </span>
+                </span>
+                    
+                </li>
+                <li class="li-sidebar" data-href="/examiner/{{user.id}}/exam/">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true">
+                    <span class="glyphicon-class">
+                        <a class="sidebar-href" href="#">New Exam</a>
+                    </span>
+                </span>
+                    
+                </li>
+
+                <li class="li-sidebar" data-href="/examiner/{{user.id}}/calendar/">
+                <span class="glyphicon glyphicon-calendar" aria-hidden="true">
+                    <span class="glyphicon-class">
+                        <a class="sidebar-href" href='#'>Calendar</a>
+                    </span>
+                </span>
+                    
+                </li>
+                <li class="li-sidebar" data-href="/examiner/{{user.id}}/drivers/">
+                <span class="glyphicon glyphicon-user" aria-hidden="true">
+                    <span class="glyphicon-class">
+                        <a class="sidebar-href" href="#">Drivers</a>
+                    </span>
+                </span>
+                </li>
+                <li class="li-sidebar" data-href="#">
+                <span class="glyphicon glyphicon-envelope" aria-hidden="true">
+                    <span class="glyphicon-class">
+                        <a class="sidebar-href" href="#">Messages</a>
+                    </span>
+                </span>                
+                </li>
+                <li class="li-sidebar" data-href="/examiner/{{user.id}}/details/">
+                <span class="glyphicon glyphicon-folder-open" aria-hidden="true">
+                    <span class="glyphicon-class">
+                        <a class="sidebar-href" href="#">My Details</a>
+                    </span>
+                </span>                    
+                </li>
+            </ul>
+        <div class="login-logout">
+        {% if user %}
+    <button type="button" class="btn btn-default examiner-auth-btn">Log Out</button   >
+        {% else %}
+    <button type="submit" class="btn btn-default examiner-auth-btn">Login</button   >
+        {% endif %}
+        </div>
+        </div>
+
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="container-fluid">
+
+                            {% block content %}
+
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+</body>
+<script>
+
+$(function(){
+    $('.li-sidebar').each(function(){
+        $(this).css('cursor','pointer').click( function(){ 
+            
+                document.location = $(this).attr('data-href'); 
+            }
+        );
+    });
+});
+
+
+</script>
+</html>
