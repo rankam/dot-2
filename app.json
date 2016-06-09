@@ -1,0 +1,8 @@
+{
+  "name": "DOT-Alpha",
+  "description": "Alpha Testing",
+  "image": "heroku/python",
+  "repository": "https://github.com/heroku/dot-exam",
+  "keywords": ["python", "django" ],
+  "addons": [ "heroku-postgresql" ]
+}
