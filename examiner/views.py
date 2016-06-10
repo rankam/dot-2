@@ -384,7 +384,7 @@ def new_exam_from_calendar(request):
 		exam_info['date'] = add_hour_minute(exam_info['date'], 
 			exam_hour, exam_minute, exam_period)
 		exam_info['driver'] = driver
-		exam_event = ExamEvent(_remove_non_model_fields('ExamEvent', exam_info))
+		exam_event = ExamEvent(**_remove_non_model_fields('ExamEvent', exam_info))
 		exam_event.save()
 
 		exam_info.pop('driver')
