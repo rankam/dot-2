@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^driver_registration/$', driver_views.driver_registration),
     url(r'^driver_health_history/$', driver_views.driver_health_history),
-    # url(r'^examiner/[0-9]+/$', examiner_views.examiner),
+    url(r'^examiner/[0-9]+/$', examiner_views.examiner),
     url(r'^examiner/[0-9]+/drivers/$', examiner_views.examiner_drivers),
     url(r'^examiner_login/$', examiner_views.examiner_login),
     # url(r'^examiner/[0-9]+/details/$', examiner_views.examiner_details),
