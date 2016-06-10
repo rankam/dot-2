@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+from django.template import RequestContext
+from django.contrib import messages
+from django.shortcuts import render, redirect, render_to_response
 from examiner.forms import *
 from django.contrib.auth.forms import UserCreationForm
 from examiner.forms import *
@@ -417,6 +419,7 @@ def examiner_information(request):
 	for location in examiner.examinerlocation_set.all():
 		location_forms.append(
 			ExaminerLocationForm({
+				'id':location.id,
 				'name':location.name,
 				'address':location.address,
 				'city':location.city,
@@ -434,7 +437,31 @@ def examiner_information(request):
 		})
 
 def examiner_information_update(request):
-	examiner = Examiner.objects.get(id=request.user.id)
+	if request.method == 'POST':
+		examiner = Examiner.objects.get(id=request.user.id)
+		el_data = {'examiner':examiner}
+		for k,v in request.POST.items():
+			if k in ExaminerLocation._meta.get_all_field_names():
+				el_data[k] = convert_data_type(ExaminerLocation._meta.get_field(k).get_internal_type(),v) 
+		try:
+			el = ExaminerLocation.objects.get(id=el_data['id'])
+			for k,v in el_data.items():
+				if k != id:
+					if getattr(el, k) != v:
+						setattr(el,k,v)
+		except:
+			el_data.pop('id')
+			el = ExaminerLocation(**el_data)
+		el.save()
+		# el.save()
+		messages.add_message(request, 25, 'Examiner Location Information Updated')
+		print request.path
+		return redirect(request.META['HTTP_REFERER'])
+		# return render_to_response('examiner_information.html')
+		# , {'messages':messages}, context_instance=RequestContext(request))
+		# HttpResponse({'messages':messages},content_type='application/json')
+
+
 
 
 @login_required(login_url='/examiner/login/')

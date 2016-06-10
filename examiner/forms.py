@@ -55,12 +55,13 @@ class ExaminerDetailsForm(forms.Form):
 	examiner_type_description = forms.CharField(required=False)
 	
 class ExaminerLocationForm(forms.Form):
+	id = forms.CharField(max_length=30, widget = forms.HiddenInput(), required = False)
 	name = forms.CharField(max_length=200)
 	address = forms.CharField(max_length=200)
 	city = forms.CharField(max_length=200)
 	state = forms.CharField(max_length=200)
 	zip_code = forms.CharField(max_length=200)
-	phone_number = forms.CharField(max_length=10)	
+	phone_number = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'name':'location_phone_number'}))
 
 # class ExaminerRegistrationForm(UserCreationForm):
 
