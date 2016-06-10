@@ -1,11 +1,25 @@
 {% extends "examiner_index.html" %}
 {% load bootstrap %}
-{% block content %}
+{% block authentication %}
 
-  <h1>Create an account</h1>
+<div class="row">
+<div class="container-fluid">
+<div class="col-md-2"></div>
+<div class="col-md-6">
+      <h1>Register</h1>
+<div class="panel panel-default">
+  <div class="panel-body">
   <form action="" method="post">
 	{% csrf_token %}
       {{ form|bootstrap }}
-<button type="submit" class="btn btn-default next-btn">Submit</button	>
+<button type="submit" class="btn btn-success register-btn">Register</button	>
+<button type="submit" class="btn btn-primary login-btn">Sign In</button	>
   </form>
+  </div>
+</div>
+</div>
+<div class="col-md-2"></div>
+</div>
+</div>
+
 {% endblock %}

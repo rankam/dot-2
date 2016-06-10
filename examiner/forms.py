@@ -62,11 +62,19 @@ class ExaminerLocationForm(forms.Form):
 	zip_code = forms.CharField(max_length=200)
 	phone_number = forms.CharField(max_length=10)	
 
-class ExaminerRegistrationForm(UserCreationForm):
+# class ExaminerRegistrationForm(UserCreationForm):
 
-    class Meta:
-    	model = User
-    	fields = ("username", "first_name", "last_name",)
+#     class Meta:
+#     	model = User
+#     	fields = ("username", "first_name", "last_name",)
+
+class ExaminerRegistrationForm(forms.Form):
+	username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'username'}), 
+		label='Email Address (This will be used for logging in)', required=True)
+	first_name = forms.CharField(max_length=30, required=True)
+	last_name = forms.CharField(max_length=30, required=True)
+	password1 = forms.CharField(widget=forms.PasswordInput(), required=True, label='Password')
+	password2 = forms.CharField(widget=forms.PasswordInput(), required=True, label='Password (Again)')
     	
 class ExaminerCompleteRegistrationForm(forms.ModelForm):
 

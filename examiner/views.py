@@ -55,7 +55,7 @@ def register(request):
 		form = ExaminerRegistrationForm(request.POST)
 		if form.is_valid():
 			user = form.save()
-			Examiner(user_id=user.id).save()
+			Examiner(id=user.id, user_id=user.id).save()
 			user = authenticate(username=request.POST['username'], password=request.POST['password1'])
 			login(request, user)
 			return redirect('/examiner/{}/calendar/'.format(user.id))
