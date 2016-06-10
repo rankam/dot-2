@@ -71,6 +71,8 @@ def register(request):
 
 ######################################### AUTH
 
+def examiner(request):
+	return render('examiner.html')
 
 class DriverDetailView(UpdateView):
 
