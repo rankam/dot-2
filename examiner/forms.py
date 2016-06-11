@@ -2,8 +2,10 @@ import django.forms as forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from examiner.models import *
-import django.forms as forms
+from django.forms import Textarea
 from drivers.models import DriverHistory
+from django.utils.translation import ugettext_lazy as _
+
 HONORIFICS = (
 	('Dr.', 'Dr.'),
 	('Mr.', 'Mr.'),
@@ -63,19 +65,22 @@ class ExaminerLocationForm(forms.Form):
 	zip_code = forms.CharField(max_length=200)
 	phone_number = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'name':'location_phone_number'}))
 
-# class ExaminerRegistrationForm(UserCreationForm):
+class ExaminerRegistrationForm(UserCreationForm):
 
-#     class Meta:
-#     	model = User
-#     	fields = ("username", "first_name", "last_name",)
+    class Meta:
+    	model = User
+    	fields = ("username", "first_name", "last_name",)
+        labels = {
+            'username': _('Email Address (This Will Be Used For Logging In)')
+        }
 
-class ExaminerRegistrationForm(forms.Form):
-	username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'username'}), 
-		label='Email Address (This will be used for logging in)', required=True)
-	first_name = forms.CharField(max_length=30, required=True)
-	last_name = forms.CharField(max_length=30, required=True)
-	password1 = forms.CharField(widget=forms.PasswordInput(), required=True, label='Password')
-	password2 = forms.CharField(widget=forms.PasswordInput(), required=True, label='Password (Again)')
+# class ExaminerRegistrationForm(forms.Form):
+# 	username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'username'}), 
+# 		label='Email Address (This will be used for logging in)', required=True)
+# 	first_name = forms.CharField(max_length=30, required=True)
+# 	last_name = forms.CharField(max_length=30, required=True)
+# 	password1 = forms.CharField(widget=forms.PasswordInput(), required=True, label='Password')
+# 	password2 = forms.CharField(widget=forms.PasswordInput(), required=True, label='Password (Again)')
     	
 class ExaminerCompleteRegistrationForm(forms.ModelForm):
 

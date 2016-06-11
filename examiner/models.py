@@ -23,7 +23,7 @@ class Examiner(models.Model):
 		)
 	id = models.AutoField(primary_key=True)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	honorific = models.CharField(choices=HONORIFICS, max_length=200, default='DR.')
+	honorific = models.CharField(choices=HONORIFICS, max_length=200, default='Dr.')
 	phone_number = models.CharField(max_length=200)
 	examiner_type = models.CharField(choices=TYPES, max_length=200)
 	examiner_type_description = models.CharField(max_length=200, null=True)

@@ -127,7 +127,7 @@ def exam_event_to_json(event):
 	exam_event['stick'] = True	
 	return simplejson.dumps(exam_event)
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def submit_exam_questions(request):
 	if request.method == 'POST':
 		examiner = Examiner.objects.get(id=request.user.id)
@@ -192,43 +192,7 @@ def _remove_non_model_fields(model_name, data_dict):
 		for k,v in data_dict.items() 
 		if k in model._meta.get_all_field_names()
 	}
-			# model_name = dct['model']
-			# if model_name == 'Driver':
-			# 	model = apps.get_model('drivers', model_name=model_name)
-			# 	try:
-			# 		driver_id = int(dct['driver_id'])
-			# 		driver = Driver.objects.get(driver_id)
-			# 		examiner = driver.examiner
-			# 	except:
-			# 		driver_id = None
-			# else:
-			# 	model = apps.get_model('examiner', model_name=model_name)
-			# model_fields = {}
-			# for k,v in dct.items():
-			# 	if k in model._meta.get_all_field_names():
-			# 		model_fields[k] = convert_data_type(model._meta.get_field(k).get_internal_type(),v)
 			
-			# if 'examiner_id' in model._meta.get_all_field_names():
-			# 	model_fields['examiner'] = examiner
-			# if 'examiner' in model._meta.get_all_field_names():
-			# 	model_fields['examiner'] = examiner
-			# if 'driver_id' in model._meta.get_all_field_names():
-			# 	model_fields['driver_id'] = driver_id
-			# if 'exam_event_id' in model._meta.get_all_field_names():
-			# 	if driver.examevent_set.last() is None:
-			# 		exam_event = _create_exam_event(examiner, driver)
-			# 	else:
-			# 		exam_event = driver.examevent_set.last()
-			# 	model_fields['exam_event_id'] = exam_event.id
-			# m = model(**model_fields)
-			# m.save()
-			# if model_name == 'Driver':
-			# 	if driver_id is None:
-			# 		driver_id = m.id
-			# 		driver = Driver.objects.get(id=driver_id)
-			# 		examiner = driver.examiner
-
-
 
 def _create_exam_event(examiner, driver):
 	exam_event = ExamEvent(date=datetime.datetime.now(),
@@ -239,7 +203,7 @@ def _create_exam_event(examiner, driver):
 
 
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def examiner_drivers(request):
 	_drivers = Driver.objects.filter(examiner_id=request.user.id).order_by('first_name')
 	paginator = Paginator(_drivers, 10)
@@ -257,7 +221,7 @@ def examiner_drivers(request):
 	return render(request, 'examiner_drivers.html', {'drivers': drivers, 'user':request.user})
 
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def examiner_details(request):
 	print(dir(request))
 	print(request.user)
@@ -279,7 +243,7 @@ def examiner_details(request):
 # drivers that have an exam scheduled today
 # doing this will allow me to add it to the session
 # or i can make the endpoint this /exam_questions/<driver_id>
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def exam_questions(request):
 	if request.method == 'GET':
 		try:
@@ -306,7 +270,7 @@ def convert_data_type(internal_type, value):
 		return value
 
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def get_exam_answers(request):
 	'''
 	Gets exam answers when a examiner goes back
@@ -315,7 +279,7 @@ def get_exam_answers(request):
 	'''
 	pass
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def exam_calendar(request):
 	exam_events = []
 	exam_event_form = ExamEventForm()
@@ -405,7 +369,7 @@ def add_hour_minute(date, hour, minute, period):
 		hour = int(hour) + 12
 	return '{} {}:{}:00'.format(date, hour, minute)
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def examiner_information(request):
 	examiner = Examiner.objects.get(id=request.user.id)
 	location_forms = []
@@ -466,7 +430,7 @@ def examiner_information_update(request):
 
 
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def driver_history(request):
 	driver_id = request.path.split('/')[-2]
 	driver = Driver.objects.get(id=driver_id)
@@ -530,7 +494,7 @@ def driver_history(request):
 	return render(request, 'examiner_driver_history.html', \
 		{'form':form, 'driver':driver})
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def driver_search(request):
 	'''
 	Server side component to ajax search.
@@ -558,7 +522,7 @@ def driver_search(request):
 		return HttpResponse(html)
 
 
-@login_required(login_url='/examiner/login/')
+@login_required(login_url='/examiner_login/')
 def driver_clear_search(request):
 	'''
 	Returns all drivers when the form is cleared by the user
