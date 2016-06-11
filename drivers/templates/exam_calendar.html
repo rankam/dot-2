@@ -265,7 +265,6 @@ $(document).ready(function() {
 			url: '/examiner/{{user.id}}/new_exam_from_calendar/',
 			data: postData,
 			success: function(data) {
-				console.log(data)
 				$('#calendar').fullCalendar('renderEvent', data)
 				$("#calendar-modal").modal("hide")
 			}

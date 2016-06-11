@@ -23,10 +23,13 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', examiner_views.landing_page),
     url(r'^driver_registration/$', driver_views.driver_registration),
     url(r'^driver_health_history/$', driver_views.driver_health_history),
     url(r'^examiner/[0-9]+/$', examiner_views.examiner),
+    url(r'^pdf/$', examiner_views.pdf_gen),
     url(r'^examiner/[0-9]+/drivers/$', examiner_views.examiner_drivers),
+    url(r'^examiner/[0-9]+/driver/[0-9]+/update/$', driver_views.driver_update),
     url(r'^examiner_login/$', examiner_views.examiner_login),
     # url(r'^examiner/[0-9]+/details/$', examiner_views.examiner_details),
     url(r'^examiner_logout/$', examiner_views.examiner_logout),
@@ -35,7 +38,7 @@ urlpatterns = [
     url(r'^examiner/[0-9]+/exam/$', examiner_views.exam_questions),
     url(r'^examiner/[0-9]+/calendar/$', examiner_views.exam_calendar),
     url(r'^examiner/[0-9]+/driver/[0-9]+/$', examiner_views.driver_history),
-    url(r'^examiner/[0-9]+/driver/[0-9]+/$', examiner_views.driver_history),
+    # url(r'^examiner/[0-9]+/driver/[0-9]+/$', examiner_views.driver_history),
     url(r'^examiner/[0-9]+/details/$', examiner_views.examiner_information),
     url(r'^examiner/[0-9]+/update_details/$', examiner_views.examiner_information_update),
     url(r'^examiner/driver_search/$', examiner_views.driver_search),
